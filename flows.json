@@ -16,21 +16,21 @@
         "in": [
             {
                 "x": 40,
-                "y": 40,
+                "y": 120,
                 "wires": [
                     {
-                        "id": "2f0fd22d602c6da6"
+                        "id": "8884863fecb63f3c"
                     }
                 ]
             }
         ],
         "out": [
             {
-                "x": 1140,
-                "y": 300,
+                "x": 880,
+                "y": 320,
                 "wires": [
                     {
-                        "id": "6578fcb77fa7c45f",
+                        "id": "7181bf4dbc626a94",
                         "port": 0
                     }
                 ]
@@ -82,12 +82,14 @@
             "bccc6f6c385b8a3a",
             "56fc02f22a459786",
             "e7e57dd41d47bd92",
-            "9af568f097724b7b"
+            "9af568f097724b7b",
+            "39b97c0ed1067938",
+            "d3d2155d2d358b96"
         ],
         "x": 34,
         "y": 39,
         "w": 1092,
-        "h": 242
+        "h": 302
     },
     {
         "id": "028f3987925e940f",
@@ -101,11 +103,11 @@
         ]
     },
     {
-        "id": "2f0fd22d602c6da6",
+        "id": "8884863fecb63f3c",
         "type": "function",
         "z": "025d5a9e74400e55",
         "name": "setMainFile",
-        "func": "const main = env.get(\"mainComponent\") || \"index\";\nconst projectPath = env.get(\"PROJECT_PATH\");\nmsg.project_path = projectPath;\nmsg.filename = `${projectPath}/components/${main}.html`;\nreturn msg;",
+        "func": "const main = env.get(\"mainComponent\") || \"index\";\nconst projectPath = env.get(\"PROJECT_PATH\");\nlet cache = global.get(\"cache\") || {};\n\n\nmsg.project_path = projectPath;\nmsg.filename = `${projectPath}/components/${main}.html`;\nconst cache_component = cache[msg.filename];\n\nif (!cache_component){\n    msg.is_catche = false;\n} else {\n    msg.payload = cache_component\n    msg.is_catche = true;\n}\nreturn msg;",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
@@ -113,34 +115,15 @@
         "finalize": "",
         "libs": [],
         "x": 170,
-        "y": 40,
+        "y": 120,
         "wires": [
             [
-                "52ba1c9421e10e9d"
+                "33b32ccb6030cdd9"
             ]
         ]
     },
     {
-        "id": "52ba1c9421e10e9d",
-        "type": "file in",
-        "z": "025d5a9e74400e55",
-        "name": "loadMainHtml",
-        "filename": "filename",
-        "filenameType": "msg",
-        "format": "utf8",
-        "sendError": false,
-        "encoding": "none",
-        "allProps": false,
-        "x": 340,
-        "y": 40,
-        "wires": [
-            [
-                "b573a074695aaf6e"
-            ]
-        ]
-    },
-    {
-        "id": "b573a074695aaf6e",
+        "id": "405511c69dbbca9e",
         "type": "switch",
         "z": "025d5a9e74400e55",
         "name": "has <component>",
@@ -160,19 +143,19 @@
         "checkall": "true",
         "repair": false,
         "outputs": 2,
-        "x": 190,
-        "y": 200,
+        "x": 550,
+        "y": 220,
         "wires": [
             [
-                "56b8b2f210cc7f82"
+                "5f68003181ac2533"
             ],
             [
-                "7de6e4d2f4836966"
+                "f1fba02dc9564d52"
             ]
         ]
     },
     {
-        "id": "56b8b2f210cc7f82",
+        "id": "5f68003181ac2533",
         "type": "function",
         "z": "025d5a9e74400e55",
         "name": "prepareMain",
@@ -183,16 +166,16 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 490,
-        "y": 120,
+        "x": 550,
+        "y": 100,
         "wires": [
             [
-                "0dd3c51ea25ae723"
+                "1216d3b92b4cb303"
             ]
         ]
     },
     {
-        "id": "0dd3c51ea25ae723",
+        "id": "1216d3b92b4cb303",
         "type": "html",
         "z": "025d5a9e74400e55",
         "name": "extract <component>",
@@ -202,36 +185,36 @@
         "ret": "text",
         "as": "multi",
         "chr": "",
-        "x": 700,
-        "y": 120,
+        "x": 740,
+        "y": 100,
         "wires": [
             [
-                "275a16aa79884aeb"
+                "a4a952b987a54749"
             ]
         ]
     },
     {
-        "id": "275a16aa79884aeb",
+        "id": "a4a952b987a54749",
         "type": "function",
         "z": "025d5a9e74400e55",
         "name": "buildPath",
-        "func": "const component = msg.payload;\nmsg.componentName = component;\nmsg.filename = `${msg.project_path}/components/${component}.html`;\nreturn msg;",
+        "func": "const component = msg.payload;\nlet cache = global.get(\"cache\") || {};\n\nmsg.componentName = component;\nmsg.filename = `${msg.project_path}/components/${component}.html`;\n\nconst cache_component = cache[msg.filename];\nif (!cache_component) {\n    msg.is_catche = false;\n} else {\n    msg.payload = cache_component\n    msg.is_catche = true;\n}\nreturn msg;",
         "outputs": 1,
         "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 900,
-        "y": 120,
+        "x": 940,
+        "y": 100,
         "wires": [
             [
-                "6d43bdef0cbfe423"
+                "6a9406204e60a0c0"
             ]
         ]
     },
     {
-        "id": "6d43bdef0cbfe423",
+        "id": "679665608fdc93d4",
         "type": "file in",
         "z": "025d5a9e74400e55",
         "name": "loadComponent",
@@ -240,16 +223,16 @@
         "format": "utf8",
         "sendError": false,
         "encoding": "none",
-        "x": 1080,
-        "y": 120,
+        "x": 900,
+        "y": 40,
         "wires": [
             [
-                "82f79c0878a8fc8d"
+                "6a80aca59b0e2fe0"
             ]
         ]
     },
     {
-        "id": "82f79c0878a8fc8d",
+        "id": "68f6d304c649b6d2",
         "type": "change",
         "z": "025d5a9e74400e55",
         "name": "template",
@@ -262,16 +245,16 @@
                 "tot": "msg"
             }
         ],
-        "x": 500,
-        "y": 200,
+        "x": 1320,
+        "y": 160,
         "wires": [
             [
-                "9e7a66fc75ac4830"
+                "2f6b1a9f139cbfc9"
             ]
         ]
     },
     {
-        "id": "03f7636a76574238",
+        "id": "74bc84ea30520580",
         "type": "join",
         "z": "025d5a9e74400e55",
         "name": "joinComponents",
@@ -291,16 +274,16 @@
         "reduceInit": "",
         "reduceInitType": "",
         "reduceFixup": "",
-        "x": 840,
-        "y": 200,
+        "x": 1340,
+        "y": 220,
         "wires": [
             [
-                "d635e13233cedb4c"
+                "3ad5fe5fe8c1501f"
             ]
         ]
     },
     {
-        "id": "d635e13233cedb4c",
+        "id": "3ad5fe5fe8c1501f",
         "type": "function",
         "z": "025d5a9e74400e55",
         "name": "replace <component>",
@@ -311,16 +294,16 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1060,
-        "y": 200,
+        "x": 1540,
+        "y": 220,
         "wires": [
             [
-                "b573a074695aaf6e"
+                "405511c69dbbca9e"
             ]
         ]
     },
     {
-        "id": "6578fcb77fa7c45f",
+        "id": "7181bf4dbc626a94",
         "type": "template",
         "z": "025d5a9e74400e55",
         "name": "render output",
@@ -330,14 +313,14 @@
         "syntax": "mustache",
         "template": "",
         "output": "str",
-        "x": 710,
-        "y": 300,
+        "x": 750,
+        "y": 320,
         "wires": [
             []
         ]
     },
     {
-        "id": "9e7a66fc75ac4830",
+        "id": "2f6b1a9f139cbfc9",
         "type": "template",
         "z": "025d5a9e74400e55",
         "name": "",
@@ -347,16 +330,16 @@
         "syntax": "mustache",
         "template": "",
         "output": "str",
-        "x": 660,
-        "y": 200,
+        "x": 1480,
+        "y": 160,
         "wires": [
             [
-                "03f7636a76574238"
+                "74bc84ea30520580"
             ]
         ]
     },
     {
-        "id": "7de6e4d2f4836966",
+        "id": "f1fba02dc9564d52",
         "type": "change",
         "z": "025d5a9e74400e55",
         "name": "",
@@ -374,11 +357,128 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 510,
-        "y": 300,
+        "x": 570,
+        "y": 320,
         "wires": [
             [
-                "6578fcb77fa7c45f"
+                "7181bf4dbc626a94"
+            ]
+        ]
+    },
+    {
+        "id": "6a9406204e60a0c0",
+        "type": "switch",
+        "z": "025d5a9e74400e55",
+        "name": "",
+        "property": "is_catche",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "false"
+            },
+            {
+                "t": "true"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 1090,
+        "y": 100,
+        "wires": [
+            [
+                "679665608fdc93d4"
+            ],
+            [
+                "68f6d304c649b6d2"
+            ]
+        ]
+    },
+    {
+        "id": "6a80aca59b0e2fe0",
+        "type": "function",
+        "z": "025d5a9e74400e55",
+        "name": "setCache",
+        "func": "let cache = global.get(\"cache\") || {};\ncache[msg.filename] = msg.payload;\nglobal.set(\"cache\", cache);\nmsg.payload = cache[msg.filename];\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1080,
+        "y": 40,
+        "wires": [
+            [
+                "68f6d304c649b6d2"
+            ]
+        ]
+    },
+    {
+        "id": "33b32ccb6030cdd9",
+        "type": "switch",
+        "z": "025d5a9e74400e55",
+        "name": "",
+        "property": "is_catche",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "false"
+            },
+            {
+                "t": "true"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 310,
+        "y": 120,
+        "wires": [
+            [
+                "762cb7879b08d536"
+            ],
+            [
+                "405511c69dbbca9e"
+            ]
+        ]
+    },
+    {
+        "id": "762cb7879b08d536",
+        "type": "file in",
+        "z": "025d5a9e74400e55",
+        "name": "loadMainHtml",
+        "filename": "filename",
+        "filenameType": "msg",
+        "format": "utf8",
+        "sendError": false,
+        "encoding": "none",
+        "allProps": false,
+        "x": 160,
+        "y": 60,
+        "wires": [
+            [
+                "4827d61356ac942d"
+            ]
+        ]
+    },
+    {
+        "id": "4827d61356ac942d",
+        "type": "function",
+        "z": "025d5a9e74400e55",
+        "name": "setCache",
+        "func": "let cache = global.get(\"cache\") || {};\ncache[msg.filename] = msg.payload;\nglobal.set(\"cache\", cache);\nmsg.payload = cache[msg.filename];\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 320,
+        "y": 60,
+        "wires": [
+            [
+                "405511c69dbbca9e"
             ]
         ]
     },
@@ -395,7 +495,7 @@
             }
         ],
         "x": 530,
-        "y": 340,
+        "y": 420,
         "wires": [
             [
                 "211265ac1b71ea62"
@@ -500,9 +600,10 @@
         "z": "5ccba3331b3862fe",
         "g": "cf522e74c2f1fece",
         "name": "indexPage",
-        "url": "/ui",
+        "url": "/",
         "method": "get",
         "upload": false,
+        "skipBodyParsing": false,
         "swaggerDoc": "",
         "x": 120,
         "y": 80,
@@ -575,7 +676,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 340,
+        "x": 310,
         "y": 240,
         "wires": [
             [
@@ -734,7 +835,7 @@
         "upload": false,
         "swaggerDoc": "",
         "x": 160,
-        "y": 340,
+        "y": 420,
         "wires": [
             [
                 "6d6308fb346dd11d"
@@ -749,7 +850,7 @@
         "statusCode": "200",
         "headers": {},
         "x": 720,
-        "y": 340,
+        "y": 420,
         "wires": []
     },
     {
@@ -765,10 +866,49 @@
         "finalize": "",
         "libs": [],
         "x": 370,
-        "y": 340,
+        "y": 420,
         "wires": [
             [
                 "bfc67594ce9932ab"
+            ]
+        ]
+    },
+    {
+        "id": "39b97c0ed1067938",
+        "type": "function",
+        "z": "5ccba3331b3862fe",
+        "g": "cf522e74c2f1fece",
+        "name": "clearCache",
+        "func": "global.set(\"cache\", {});\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 300,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "d3d2155d2d358b96",
+        "type": "inject",
+        "z": "5ccba3331b3862fe",
+        "g": "cf522e74c2f1fece",
+        "name": "",
+        "props": [],
+        "repeat": "60",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 130,
+        "y": 300,
+        "wires": [
+            [
+                "39b97c0ed1067938"
             ]
         ]
     }
